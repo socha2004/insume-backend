@@ -1,7 +1,5 @@
 ﻿using insume_backend.Application.DTOs.Auth;
 using insume_backend.Application.Interfaces;
-using insume_backend.Application.DTOs.Auth;
-using insume_backend.Application.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
 namespace insume_backend.Controllers
