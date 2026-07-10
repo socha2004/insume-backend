@@ -1,3 +1,5 @@
+using insume_backend.Application.Interfaces;
+using insume_backend.Application.Services;
 using insume_backend.Infraestructure.Data;
 using insume_backend.Infraestructure.Data;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -15,6 +17,8 @@ builder.Services.AddSwaggerGen();
 // EF Core + Npgsql
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+builder.Services.AddScoped<IAuthService, AuthService>();
 
 // JWT Authentication
 var jwtKey = builder.Configuration["Jwt:Key"]!;
