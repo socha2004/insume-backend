@@ -13,11 +13,14 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+builder.Services.AddHttpContextAccessor();
 
 // EF Core + Npgsql
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
 
+// DI Services
+builder.Services.AddScoped<IInsumoService, InsumoService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
 
 // JWT Authentication

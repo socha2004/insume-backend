@@ -1,6 +1,6 @@
-﻿namespace insume_backend.Domain.Entities
+﻿namespace insume_backend.Application.DTOs.Insumo
 {
-    public class Insumo
+    public class InsumoResponseDto
     {
         public int Id { get; set; }
         public string Nome { get; set; } = string.Empty;
@@ -11,13 +11,10 @@
         public string? Marca { get; set; }
         public string? Observacao { get; set; }
 
-        public int IdCategoria { get; set; }
-        public Categoria Categoria { get; set; } = null!;
+        public string Categoria { get; set; } = string.Empty;
+        public string CriadoPor { get; set; } = string.Empty;
 
-        public int IdUsuario { get; set; }
-        public Usuario Usuario { get; set; } = null!;
-
-        public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
-        public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
+        public DateTime CreatedAt { get; set; }
+        public DateTime UpdatedAt { get; set; }
     }
 }
