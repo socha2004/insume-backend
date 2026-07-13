@@ -1,7 +1,6 @@
 using insume_backend.Application.Interfaces;
 using insume_backend.Application.Services;
 using insume_backend.Infraestructure.Data;
-using insume_backend.Infraestructure.Data;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -22,6 +21,7 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 // DI Services
 builder.Services.AddScoped<IInsumoService, InsumoService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
+builder.Services.AddScoped<ICategoriaService, CategoriaService>();
 
 // JWT Authentication
 var jwtKey = builder.Configuration["Jwt:Key"]!;
