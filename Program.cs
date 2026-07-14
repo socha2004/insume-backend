@@ -54,6 +54,7 @@ builder.Services.AddCors(options =>
         policy.WithOrigins("http://localhost:5173") // porta padrão do Vite
               .AllowAnyHeader()
               .AllowAnyMethod();
+
     });
 });
 

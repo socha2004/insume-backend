@@ -1,4 +1,6 @@
-﻿namespace insume_backend.Domain.Entities
+﻿using System.ComponentModel.DataAnnotations.Schema;
+
+namespace insume_backend.Domain.Entities
 {
     public class Insumo
     {
@@ -11,9 +13,11 @@
         public string? Marca { get; set; }
         public string? Observacao { get; set; }
 
+        [ForeignKey("Categoria")]
         public int IdCategoria { get; set; }
         public Categoria Categoria { get; set; } = null!;
 
+        [ForeignKey("Usuario")]
         public int IdUsuario { get; set; }
         public Usuario Usuario { get; set; } = null!;
 
