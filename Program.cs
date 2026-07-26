@@ -1,7 +1,6 @@
 using insume_backend.Application.Interfaces;
 using insume_backend.Application.Services;
 using insume_backend.Infraestructure.Data;
-using insume_backend.Infraestructure.Data;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -13,12 +12,16 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+builder.Services.AddHttpContextAccessor();
 
 // EF Core + Npgsql
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
 
+// DI Services
+builder.Services.AddScoped<IInsumoService, InsumoService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
+builder.Services.AddScoped<ICategoriaService, CategoriaService>();
 
 // JWT Authentication
 var jwtKey = builder.Configuration["Jwt:Key"]!;
@@ -51,6 +54,7 @@ builder.Services.AddCors(options =>
         policy.WithOrigins("http://localhost:5173") // porta padrão do Vite
               .AllowAnyHeader()
               .AllowAnyMethod();
+
     });
 });
 
