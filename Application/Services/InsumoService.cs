@@ -10,6 +10,7 @@ namespace insume_backend.Application.Services
 {
     public class InsumoService : IInsumoService
     {
+
         private readonly AppDbContext _context;
         private readonly IHttpContextAccessor _httpContextAccessor;
 
@@ -21,7 +22,9 @@ namespace insume_backend.Application.Services
 
         public async Task<IEnumerable<InsumoResponseDto>> GetAllAsync()
         {
+            var usuarioId = GetUsuarioLogadoId();
             return await _context.Insumos
+                .Where(i => i.IdUsuario == usuarioId)
                 .Include(i => i.Categoria)
                 .Include(i => i.Usuario)
                 .Select(i => MapToResponseDto(i))
@@ -30,21 +33,24 @@ namespace insume_backend.Application.Services
 
         public async Task<InsumoResponseDto?> GetByIdAsync(int id)
         {
+            var usuarioId = GetUsuarioLogadoId();
             var insumo = await _context.Insumos
                 .Include(i => i.Categoria)
                 .Include(i => i.Usuario)
-                .FirstOrDefaultAsync(i => i.Id == id);
+                .FirstOrDefaultAsync(i => i.Id == id && i.IdUsuario == usuarioId);
 
             return insumo == null ? null : MapToResponseDto(insumo);
         }
 
         public async Task<InsumoResponseDto> CreateAsync(InsumoRequestDto dto)
         {
+            var usuarioId = GetUsuarioLogadoId();
+
             var categoriaExiste = await _context.Categorias
-                .AnyAsync(c => c.Id == dto.IdCategoria);
+                .AnyAsync(c => c.Id == dto.IdCategoria && c.idUsuario == usuarioId );
 
             if (!categoriaExiste)
-                throw new InvalidOperationException("Categoria informada não existe.");
+                throw new InvalidOperationException("Categoria inválida ou não pertence ao usuário.");
 
             var insumo = new Insumo
             {
@@ -56,7 +62,7 @@ namespace insume_backend.Application.Services
                 Marca = dto.Marca,
                 Observacao = dto.Observacao,
                 IdCategoria = dto.IdCategoria,
-                IdUsuario = GetUsuarioLogadoId(),
+                IdUsuario = usuarioId,
                 CreatedAt = DateTime.UtcNow,
                 UpdatedAt = DateTime.UtcNow
             };
@@ -73,10 +79,12 @@ namespace insume_backend.Application.Services
 
         public async Task<InsumoResponseDto?> UpdateAsync(int id, InsumoRequestDto dto)
         {
+            var usuarioId = GetUsuarioLogadoId();
+
             var insumo = await _context.Insumos
                 .Include(i => i.Categoria)
                 .Include(i => i.Usuario)
-                .FirstOrDefaultAsync(i => i.Id == id);
+                .FirstOrDefaultAsync(i => i.Id == id && i.IdUsuario == usuarioId);
 
             if (insumo == null)
                 return null;
@@ -85,7 +93,7 @@ namespace insume_backend.Application.Services
                 throw new UnauthorizedAccessException("Você não tem permissão para editar este insumo.");
 
             var categoriaExiste = await _context.Categorias
-                .AnyAsync(c => c.Id == dto.IdCategoria);
+                .AnyAsync(c => c.Id == dto.IdCategoria && c.idUsuario == usuarioId);
 
             if (!categoriaExiste)
                 throw new InvalidOperationException("Categoria informada não existe.");
@@ -110,7 +118,8 @@ namespace insume_backend.Application.Services
 
         public async Task<bool> DeleteAsync(int id)
         {
-            var insumo = await _context.Insumos.FindAsync(id);
+            var usuarioId = GetUsuarioLogadoId();
+            var insumo = await _context.Insumos.FirstOrDefaultAsync(i => i.Id == id && i.IdUsuario == usuarioId);
 
             if (insumo == null)
                 return false;

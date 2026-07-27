@@ -1,8 +1,9 @@
 ﻿using insume_backend.Application.DTOs.Categoria;
 using insume_backend.Application.Interfaces;
+using insume_backend.Domain.Entities;
 using insume_backend.Infraestructure.Data;
 using Microsoft.EntityFrameworkCore;
-using insume_backend.Domain.Entities;
+using System.Security.Claims;
 
 namespace insume_backend.Application.Services
 {
@@ -17,9 +18,21 @@ namespace insume_backend.Application.Services
             _httpContextAccessor = httpContextAccessor;
         }
 
+        private int GetUsuarioIdLogado()
+        {
+            var usuarioIdClaim = _httpContextAccessor.HttpContext!.User
+                .FindFirst(ClaimTypes.NameIdentifier)!.Value;
+
+            return int.Parse(usuarioIdClaim);
+        }
+
         public async Task<IEnumerable<CategoriaResponseDto>> GetAllAsync()
         {
-            var categorias = await _context.Categorias.ToListAsync();
+            var usuarioId = GetUsuarioIdLogado();
+            var categorias = await _context.Categorias
+                .Where(c => c.idUsuario == usuarioId)
+                .ToListAsync();
+
             return categorias.Select(c => new CategoriaResponseDto
             {
                 Id = c.Id,
@@ -29,8 +42,13 @@ namespace insume_backend.Application.Services
 
         public async Task<CategoriaResponseDto?> GetByIdAsync(int id)
         {
-            var categoria = await _context.Categorias.FindAsync(id);
+            var usuarioId = GetUsuarioIdLogado();
+
+            var categoria = await _context.Categorias
+                .FirstOrDefaultAsync(c => c.Id == id && c.Id == usuarioId);
+
             if (categoria == null) return null;
+
             return new CategoriaResponseDto
             {
                 Id = categoria.Id,
@@ -40,9 +58,11 @@ namespace insume_backend.Application.Services
 
         public async Task<CategoriaResponseDto> CreateAsync(CategoriaRequestDto dto)
         {
+            var usuarioId = GetUsuarioIdLogado();
             var categoria = new Categoria
             {
-                Titulo = dto.Titulo
+                Titulo = dto.Titulo,
+                idUsuario = usuarioId
             };
 
             _context.Categorias.Add(categoria);
@@ -57,7 +77,9 @@ namespace insume_backend.Application.Services
 
         public async Task<CategoriaResponseDto?> UpdateAsync(int id, CategoriaRequestDto dto)
         {
-            var categoria = await _context.Categorias.FindAsync(id);
+            var usuarioId = GetUsuarioIdLogado();
+
+            var categoria = await _context.Categorias.FirstOrDefaultAsync(c => c.Id == id && c.Id == usuarioId);
 
             if (categoria == null) return null;
 
@@ -73,7 +95,9 @@ namespace insume_backend.Application.Services
 
         public async Task<bool> DeleteAsync(int id)
         {
-            var categoria = await _context.Categorias.FindAsync(id);
+            var usuarioId = GetUsuarioIdLogado();
+
+            var categoria = await _context.Categorias.FirstOrDefaultAsync(c => c.Id == id && c.Id == usuarioId);
 
             if (categoria == null) return false;
 
