@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using insume_backend.Infraestructure.Data;
@@ -11,9 +12,11 @@ using insume_backend.Infraestructure.Data;
 namespace insume_backend.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260727210331_AddUsuarioIdToCategoria")]
+    partial class AddUsuarioIdToCategoria
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -35,6 +38,9 @@ namespace insume_backend.Migrations
                         .HasColumnType("text");
 
                     b.Property<int>("UsuarioId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("idUsuario")
                         .HasColumnType("integer");
 
                     b.HasKey("Id");
@@ -124,7 +130,7 @@ namespace insume_backend.Migrations
             modelBuilder.Entity("insume_backend.Domain.Entities.Categoria", b =>
                 {
                     b.HasOne("insume_backend.Domain.Entities.Usuario", "Usuario")
-                        .WithMany("Categorias")
+                        .WithMany()
                         .HasForeignKey("UsuarioId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -158,8 +164,6 @@ namespace insume_backend.Migrations
 
             modelBuilder.Entity("insume_backend.Domain.Entities.Usuario", b =>
                 {
-                    b.Navigation("Categorias");
-
                     b.Navigation("Insumos");
                 });
 #pragma warning restore 612, 618
