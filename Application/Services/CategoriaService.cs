@@ -30,7 +30,7 @@ namespace insume_backend.Application.Services
         {
             var usuarioId = GetUsuarioIdLogado();
             var categorias = await _context.Categorias
-                .Where(c => c.idUsuario == usuarioId)
+                .Where(c => c.UsuarioId == usuarioId)
                 .ToListAsync();
 
             return categorias.Select(c => new CategoriaResponseDto
@@ -62,7 +62,7 @@ namespace insume_backend.Application.Services
             var categoria = new Categoria
             {
                 Titulo = dto.Titulo,
-                idUsuario = usuarioId
+                UsuarioId = usuarioId
             };
 
             _context.Categorias.Add(categoria);

@@ -47,7 +47,7 @@ namespace insume_backend.Application.Services
             var usuarioId = GetUsuarioLogadoId();
 
             var categoriaExiste = await _context.Categorias
-                .AnyAsync(c => c.Id == dto.IdCategoria && c.idUsuario == usuarioId );
+                .AnyAsync(c => c.Id == dto.IdCategoria && c.UsuarioId == usuarioId );
 
             if (!categoriaExiste)
                 throw new InvalidOperationException("Categoria inválida ou não pertence ao usuário.");
@@ -93,7 +93,7 @@ namespace insume_backend.Application.Services
                 throw new UnauthorizedAccessException("Você não tem permissão para editar este insumo.");
 
             var categoriaExiste = await _context.Categorias
-                .AnyAsync(c => c.Id == dto.IdCategoria && c.idUsuario == usuarioId);
+                .AnyAsync(c => c.Id == dto.IdCategoria && c.UsuarioId == usuarioId);
 
             if (!categoriaExiste)
                 throw new InvalidOperationException("Categoria informada não existe.");
