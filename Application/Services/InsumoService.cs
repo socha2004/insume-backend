@@ -161,6 +161,7 @@ namespace insume_backend.Application.Services
                 Marca = i.Marca,
                 Observacao = i.Observacao,
                 Categoria = i.Categoria.Titulo,
+                IdCategoria = i.IdCategoria,
                 CriadoPor = i.Usuario.Nome,
                 CreatedAt = i.CreatedAt,
                 UpdatedAt = i.UpdatedAt

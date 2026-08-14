@@ -45,7 +45,7 @@ namespace insume_backend.Application.Services
             var usuarioId = GetUsuarioIdLogado();
 
             var categoria = await _context.Categorias
-                .FirstOrDefaultAsync(c => c.Id == id && c.Id == usuarioId);
+                .FirstOrDefaultAsync(c => c.Id == id && c.UsuarioId == usuarioId);
 
             if (categoria == null) return null;
 
@@ -79,7 +79,7 @@ namespace insume_backend.Application.Services
         {
             var usuarioId = GetUsuarioIdLogado();
 
-            var categoria = await _context.Categorias.FirstOrDefaultAsync(c => c.Id == id && c.Id == usuarioId);
+            var categoria = await _context.Categorias.FirstOrDefaultAsync(c => c.Id == id && c.UsuarioId == usuarioId);
 
             if (categoria == null) return null;
 
@@ -97,7 +97,7 @@ namespace insume_backend.Application.Services
         {
             var usuarioId = GetUsuarioIdLogado();
 
-            var categoria = await _context.Categorias.FirstOrDefaultAsync(c => c.Id == id && c.Id == usuarioId);
+            var categoria = await _context.Categorias.FirstOrDefaultAsync(c => c.Id == id && c.UsuarioId == usuarioId);
 
             if (categoria == null) return false;
 
