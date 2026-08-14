@@ -8,5 +8,6 @@
         public string SenhaHash { get; set; } = string.Empty;
 
         public ICollection<Insumo> Insumos { get; set; } = new List<Insumo>();
+        public ICollection<Categoria> Categorias { get; set; }
     }
 }
