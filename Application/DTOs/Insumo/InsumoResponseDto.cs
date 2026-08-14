@@ -12,6 +12,7 @@
         public string? Observacao { get; set; }
 
         public string Categoria { get; set; } = string.Empty;
+        public int IdCategoria { get; set; }
         public string CriadoPor { get; set; } = string.Empty;
 
         public DateTime CreatedAt { get; set; }

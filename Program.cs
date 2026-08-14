@@ -16,7 +16,9 @@ builder.Services.AddHttpContextAccessor();
 
 // EF Core + Npgsql
 builder.Services.AddDbContext<AppDbContext>(options =>
-    options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
+    options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection"),
+    npgsqlOptions => npgsqlOptions.EnableRetryOnFailure()
+    ));
 
 // DI Services
 builder.Services.AddScoped<IInsumoService, InsumoService>();
