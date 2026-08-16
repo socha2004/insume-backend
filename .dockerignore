@@ -1,0 +1,44 @@
+# Build outputs
+**/bin/
+**/obj/
+**/out/
+
+# Git
+.git/
+.gitignore
+.gitattributes
+
+# IDE / editor
+.vs/
+.vscode/
+*.user
+*.suo
+
+# Secrets e configs locais (NUNCA subir para a imagem)
+secrets.example.json
+appsettings.Development.json
+appsettings.*.local.json
+*.env
+.env
+
+# Docs e metadados (não afetam o runtime)
+README.md
+LICENSE.txt
+*.md
+
+# Testes (se tiver projeto de testes na mesma pasta)
+**/*Tests/
+**/*.Tests/
+
+# Docker
+Dockerfile*
+.dockerignore
+
+# Logs e temporários
+*.log
+tmp/
+temp/
+
+# Migrations geradas localmente que não devem ir pra imagem (opcional -
+# remova esta linha se você QUER que as migrations vão junto na imagem)
+# Migrations/
