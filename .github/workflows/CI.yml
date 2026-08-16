@@ -1,0 +1,38 @@
+name: Run EF Core Migrations
+
+on:
+  push:
+    branches:
+      - main
+  
+  pull_request:
+    types: [closed]
+    branches:
+      - main
+
+jobs:
+  migrate:
+    
+    if: github.event_name == 'push' || github.event.pull_request.merged == true
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout do código
+        uses: actions/checkout@v4
+
+      - name: Configurar .NET SDK
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '10.0.x'
+
+      - name: Restaurar dependências
+        run: dotnet restore
+
+      - name: Instalar dotnet-ef
+        run: dotnet tool install --global dotnet-ef
+
+      - name: Aplicar migrations no banco de produção
+        env:
+          # Settings > Secrets and variables > Actions
+          ConnectionStrings__DefaultConnection: ${{ secrets.PROD_DB_CONNECTION_STRING }}
+        run: dotnet ef database update --project . --no-build || dotnet ef database update --project .
