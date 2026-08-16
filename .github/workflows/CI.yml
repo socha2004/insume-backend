@@ -3,12 +3,12 @@ name: Run EF Core Migrations
 on:
   push:
     branches:
-      - main
+      - master
   
   pull_request:
     types: [closed]
     branches:
-      - main
+      - master
 
 jobs:
   migrate:
