@@ -2,6 +2,7 @@ using insume_backend.Application.Interfaces;
 using insume_backend.Application.Services;
 using insume_backend.Infraestructure.Data;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
@@ -10,6 +11,19 @@ var builder = WebApplication.CreateBuilder(args);
 
 var port = Environment.GetEnvironmentVariable("PORT") ?? "80";
 builder.WebHost.UseUrls($"http://0.0.0.0:{port}");
+
+builder.Services.Configure<ForwardedHeadersOptions>(options =>
+{
+    options.ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto;
+
+    // A Vercel atua como proxy reverso "desconhecido" (IP muda),
+    // então limpamos as listas de proxies/redes confiáveis para aceitar
+    // os headers de qualquer origem. Isso é seguro aqui porque o
+    // container só é acessível através do proxy da Vercel, não direto da internet.
+    options.KnownNetworks.Clear();
+    options.KnownProxies.Clear();
+});
+
 
 // Controllers
 builder.Services.AddControllers();
@@ -64,6 +78,7 @@ builder.Services.AddCors(options =>
 });
 
 var app = builder.Build();
+app.UseForwardedHeaders();
 
 if (app.Environment.IsDevelopment())
 {
@@ -71,7 +86,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-//app.UseHttpsRedirection();
+app.UseHttpsRedirection();
 app.UseCors("AllowFrontend");
 app.UseAuthentication();
 app.UseAuthorization();
