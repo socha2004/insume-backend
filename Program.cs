@@ -9,11 +9,7 @@ using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
-Console.WriteLine($"[DEBUG] Jwt:Key presente? {!string.IsNullOrEmpty(builder.Configuration["Jwt:Key"])}");
-Console.WriteLine($"[DEBUG] Jwt:Issuer = {builder.Configuration["Jwt:Issuer"]}");
-Console.WriteLine($"[DEBUG] ConnectionStrings:DefaultConnection presente? {!string.IsNullOrEmpty(builder.Configuration.GetConnectionString("DefaultConnection"))}");
-
-var port = Environment.GetEnvironmentVariable("PORT") ?? "80";
+var port = Environment.GetEnvironmentVariable("PORT") ?? "8080";
 builder.WebHost.UseUrls($"http://0.0.0.0:{port}");
 
 builder.Services.Configure<ForwardedHeadersOptions>(options =>
