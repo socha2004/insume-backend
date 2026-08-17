@@ -9,6 +9,10 @@ using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
+Console.WriteLine($"[DEBUG] Jwt:Key presente? {!string.IsNullOrEmpty(builder.Configuration["Jwt:Key"])}");
+Console.WriteLine($"[DEBUG] Jwt:Issuer = {builder.Configuration["Jwt:Issuer"]}");
+Console.WriteLine($"[DEBUG] ConnectionStrings:DefaultConnection presente? {!string.IsNullOrEmpty(builder.Configuration.GetConnectionString("DefaultConnection"))}");
+
 var port = Environment.GetEnvironmentVariable("PORT") ?? "80";
 builder.WebHost.UseUrls($"http://0.0.0.0:{port}");
 
@@ -16,10 +20,6 @@ builder.Services.Configure<ForwardedHeadersOptions>(options =>
 {
     options.ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto;
 
-    // A Vercel atua como proxy reverso "desconhecido" (IP muda),
-    // então limpamos as listas de proxies/redes confiáveis para aceitar
-    // os headers de qualquer origem. Isso é seguro aqui porque o
-    // container só é acessível através do proxy da Vercel, não direto da internet.
     options.KnownNetworks.Clear();
     options.KnownProxies.Clear();
 });
